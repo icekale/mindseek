@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">思维碰撞</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">首页</string>
+    <string name="nav_search">搜索</string>
+    <string name="nav_subscription">订阅</string>
+    <string name="nav_profile">我的</string>
+    
+    <!-- Home Screen -->
+    <string name="home_recommended">推荐播客</string>
+    <string name="home_loading">加载中...</string>
+    <string name="home_error">加载失败，请重试</string>
+    <string name="home_retry">重试</string>
+    
+    <!-- Player -->
+    <string name="player_play">播放</string>
+    <string name="player_pause">暂停</string>
+    <string name="player_stop">停止</string>
+    <string name="player_next">下一集</string>
+    <string name="player_previous">上一集</string>
+    
+    <!-- Podcast -->
+    <string name="podcast_subscribe">订阅</string>
+    <string name="podcast_unsubscribe">取消订阅</string>
+    <string name="podcast_episodes">节目列表</string>
+    
+    <!-- Common -->
+    <string name="loading">加载中...</string>
+    <string name="error">出错了</string>
+    <string name="retry">重试</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确认</string>
+</resources>
