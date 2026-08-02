@@ -342,7 +342,6 @@ fun PodcastComponentPreview() {
         // 模拟播放器控件
         PlayerControlsPreview()
     }
-    }
 }
 
 @Composable
