@@ -243,7 +243,7 @@ class PodcastRepositoryImpl @Inject constructor(
                 Log.d("NioRadio", "Fetching episodes for albumId=$albumId")
                 val episodes = getAlbumEpisodes(albumId = albumId, page = 1, pageSize = 20)
                 Log.d("NioRadio", "Got ${episodes.size} episodes for albumId=$albumId")
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 Log.e("NioRadio", "Failed to load episodes for albumId=$albumId", e)
             }
         } else {

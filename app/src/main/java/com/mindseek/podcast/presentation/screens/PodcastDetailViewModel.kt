@@ -40,8 +40,7 @@ class PodcastDetailViewModel @Inject constructor(
                 val podcast = getPodcastDetailUseCase(podcastId)
                 _uiState.value = _uiState.value.copy(podcast = podcast)
                 
-                // Load episodes — use a timeout to detect stuck state
-                var gotEpisodes = false
+                // Load episodes
                 getPodcastEpisodesUseCase(podcastId)
                     .catch { e ->
                         _uiState.value = _uiState.value.copy(
@@ -50,7 +49,6 @@ class PodcastDetailViewModel @Inject constructor(
                         )
                     }
                     .collect { episodes ->
-                        gotEpisodes = true
                         _uiState.value = _uiState.value.copy(
                             episodes = episodes,
                             isLoading = false,
@@ -58,9 +56,10 @@ class PodcastDetailViewModel @Inject constructor(
                         )
                     }
                     
-            } catch (e: Exception) {
+            } catch (t: Throwable) {
+                android.util.Log.e("NioRadio", "Crash in loadPodcastDetail", t)
                 _uiState.value = _uiState.value.copy(
-                    errorMessage = "加载失败: ${e.message}",
+                    errorMessage = "出错: ${t.message}",
                     isLoading = false
                 )
             }
