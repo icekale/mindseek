@@ -6,14 +6,12 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import android.content.Context
-import com.mindseek.podcast.data.local.dao.CommentDao
 import com.mindseek.podcast.data.local.dao.DownloadTaskDao
 import com.mindseek.podcast.data.local.dao.EpisodeDao
 import com.mindseek.podcast.data.local.dao.FavoriteDao
 import com.mindseek.podcast.data.local.dao.PlayHistoryDao
 import com.mindseek.podcast.data.local.dao.PodcastDao
 import com.mindseek.podcast.data.local.dao.SearchHistoryDao
-import com.mindseek.podcast.data.local.entity.Comment
 import com.mindseek.podcast.data.local.entity.DownloadTask
 import com.mindseek.podcast.data.local.entity.Episode
 import com.mindseek.podcast.data.local.entity.Favorite
@@ -26,19 +24,17 @@ import com.mindseek.podcast.data.local.entity.SearchHistory
         Podcast::class,
         Episode::class,
         PlayHistory::class,
-        Comment::class,
         Favorite::class,
         SearchHistory::class,
         DownloadTask::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = true
 )
 abstract class PodcastDatabase : RoomDatabase() {
     abstract fun podcastDao(): PodcastDao
     abstract fun episodeDao(): EpisodeDao
     abstract fun playHistoryDao(): PlayHistoryDao
-    abstract fun commentDao(): CommentDao
     abstract fun favoriteDao(): FavoriteDao
     abstract fun searchHistoryDao(): SearchHistoryDao
     abstract fun downloadTaskDao(): DownloadTaskDao
@@ -125,13 +121,21 @@ abstract class PodcastDatabase : RoomDatabase() {
             }
         }
 
+        // Migration from version 5 to 6: Drop comments table (Nio Radio doesn't support comments)
+        val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("DROP TABLE IF EXISTS comments")
+            }
+        }
+
         // Helper function to get all migrations
         fun getAllMigrations(): Array<Migration> {
             return arrayOf(
                 MIGRATION_1_2,
                 MIGRATION_2_3,
                 MIGRATION_3_4,
-                MIGRATION_4_5
+                MIGRATION_4_5,
+                MIGRATION_5_6
             )
         }
         

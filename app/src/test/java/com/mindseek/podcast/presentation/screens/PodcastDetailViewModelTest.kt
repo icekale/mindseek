@@ -4,10 +4,7 @@ import com.mindseek.podcast.domain.model.EpisodeDomain
 import com.mindseek.podcast.domain.model.PodcastDomain
 import com.mindseek.podcast.domain.usecase.GetPodcastDetailUseCase
 import com.mindseek.podcast.domain.usecase.GetPodcastEpisodesUseCase
-import com.mindseek.podcast.domain.usecase.SubscribeToPodcastUseCase
-import com.mindseek.podcast.domain.usecase.UnsubscribeFromPodcastUseCase
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,8 +26,6 @@ class PodcastDetailViewModelTest {
 
     private lateinit var getPodcastDetailUseCase: GetPodcastDetailUseCase
     private lateinit var getPodcastEpisodesUseCase: GetPodcastEpisodesUseCase
-    private lateinit var subscribeToPodcastUseCase: SubscribeToPodcastUseCase
-    private lateinit var unsubscribeFromPodcastUseCase: UnsubscribeFromPodcastUseCase
     private lateinit var viewModel: PodcastDetailViewModel
 
     private val testDispatcher = StandardTestDispatcher()
@@ -41,14 +36,10 @@ class PodcastDetailViewModelTest {
         
         getPodcastDetailUseCase = mockk()
         getPodcastEpisodesUseCase = mockk()
-        subscribeToPodcastUseCase = mockk(relaxed = true)
-        unsubscribeFromPodcastUseCase = mockk(relaxed = true)
         
         viewModel = PodcastDetailViewModel(
             getPodcastDetailUseCase,
-            getPodcastEpisodesUseCase,
-            subscribeToPodcastUseCase,
-            unsubscribeFromPodcastUseCase
+            getPodcastEpisodesUseCase
         )
     }
 
@@ -139,8 +130,7 @@ class PodcastDetailViewModelTest {
         viewModel.toggleSubscription()
         advanceUntilIdle()
 
-        // Then
-        coVerify { subscribeToPodcastUseCase(podcastId) }
+        // Then - subscription is now local-only
         val uiState = viewModel.uiState.value
         assertTrue(uiState.podcast?.isSubscribed == true)
         assertFalse(uiState.isSubscribing)
@@ -172,8 +162,7 @@ class PodcastDetailViewModelTest {
         viewModel.toggleSubscription()
         advanceUntilIdle()
 
-        // Then
-        coVerify { unsubscribeFromPodcastUseCase(podcastId) }
+        // Then - subscription is now local-only
         val uiState = viewModel.uiState.value
         assertFalse(uiState.podcast?.isSubscribed == true)
         assertFalse(uiState.isSubscribing)

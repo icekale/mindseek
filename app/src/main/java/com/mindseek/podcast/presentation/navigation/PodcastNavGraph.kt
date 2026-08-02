@@ -15,7 +15,6 @@ import com.mindseek.podcast.presentation.screens.HomeScreen
 import com.mindseek.podcast.presentation.screens.PodcastDetailScreen
 import com.mindseek.podcast.presentation.screens.ProfileScreen
 import com.mindseek.podcast.presentation.screens.SearchScreen
-import com.mindseek.podcast.presentation.screens.SubscriptionScreen
 import com.mindseek.podcast.presentation.player.PlayerScreen
 
 /**
@@ -58,18 +57,6 @@ fun PodcastNavGraph(
             )
         }
 
-        // 订阅页面
-        composable(Screen.Subscription.route) {
-            SubscriptionScreen(
-                onNavigateToPodcastDetail = { podcastId ->
-                    navController.navigate(Screen.PodcastDetail.createRoute(podcastId))
-                },
-                onNavigateToPlayer = {
-                    navController.navigate(Screen.Player.route)
-                }
-            )
-        }
-
         // 个人中心
         composable(Screen.Profile.route) {
             ProfileScreen(
@@ -103,7 +90,7 @@ fun PodcastNavGraph(
             )
         }
 
-        // 播放器页�?- 使用从底部滑入的动画
+        // 播放器页面 - 使用从底部滑入的动画
         composable(
             route = Screen.Player.route,
             arguments = listOf(
@@ -148,25 +135,6 @@ fun PodcastNavGraph(
                     navController.navigate(Screen.Player.route)
                 }
             )
-        }
-
-        // 评论页面
-        composable(
-            route = Screen.Comments.route,
-            arguments = listOf(
-                navArgument(NavArgs.EPISODE_ID) {
-                    type = NavType.StringType
-                }
-            )
-        ) { backStackEntry ->
-            val episodeId = backStackEntry.arguments?.getString(NavArgs.EPISODE_ID) ?: ""
-            // TODO: 实现评论页面
-            // CommentsScreen(
-            //     episodeId = episodeId,
-            //     onNavigateBack = {
-            //         navController.popBackStack()
-            //     }
-            // )
         }
     }
 }

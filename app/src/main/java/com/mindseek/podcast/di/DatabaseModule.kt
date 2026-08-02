@@ -38,9 +38,6 @@ object DatabaseModule {
     fun providePlayHistoryDao(database: PodcastDatabase): PlayHistoryDao = database.playHistoryDao()
 
     @Provides
-    fun provideCommentDao(database: PodcastDatabase): CommentDao = database.commentDao()
-
-    @Provides
     fun provideFavoriteDao(database: PodcastDatabase): FavoriteDao = database.favoriteDao()
 
     @Provides

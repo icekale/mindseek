@@ -99,45 +99,6 @@ class DataModelTest {
     }
 
     @Test
-    fun `comment data class should be created with correct values`() {
-        // Given
-        val comment = Comment(
-            id = "1",
-            episodeId = "episode1",
-            userId = "user1",
-            content = "Great episode!",
-            timestamp = 1234567890L,
-            likeCount = 5,
-            parentCommentId = "parent1"
-        )
-
-        // Then
-        assertEquals("1", comment.id)
-        assertEquals("episode1", comment.episodeId)
-        assertEquals("user1", comment.userId)
-        assertEquals("Great episode!", comment.content)
-        assertEquals(1234567890L, comment.timestamp)
-        assertEquals(5, comment.likeCount)
-        assertEquals("parent1", comment.parentCommentId)
-    }
-
-    @Test
-    fun `comment should have default like count as zero`() {
-        // Given
-        val comment = Comment(
-            id = "1",
-            episodeId = "episode1",
-            userId = "user1",
-            content = "Great episode!",
-            timestamp = 1234567890L
-        )
-
-        // Then
-        assertEquals(0, comment.likeCount)
-        assertNull(comment.parentCommentId)
-    }
-
-    @Test
     fun `play history data class should be created with correct values`() {
         // Given
         val playHistory = PlayHistory(
@@ -213,47 +174,5 @@ class DataModelTest {
         assertEquals(2, podcastWithEpisodes.episodes.size)
         assertEquals("Episode 1", podcastWithEpisodes.episodes[0].title)
         assertEquals("Episode 2", podcastWithEpisodes.episodes[1].title)
-    }
-
-    @Test
-    fun `episode with comments relationship should work correctly`() {
-        // Given
-        val episode = Episode(
-            id = "1",
-            podcastId = "podcast1",
-            title = "Test Episode",
-            description = "Test Episode Description",
-            audioUrl = "https://example.com/audio.mp3",
-            duration = 3600000L,
-            publishDate = 1234567890L
-        )
-
-        val comments = listOf(
-            Comment(
-                id = "1",
-                episodeId = "1",
-                userId = "user1",
-                content = "Great episode!",
-                timestamp = 1234567890L
-            ),
-            Comment(
-                id = "2",
-                episodeId = "1",
-                userId = "user2",
-                content = "Very informative!",
-                timestamp = 1234567900L
-            )
-        )
-
-        val episodeWithComments = EpisodeWithComments(
-            episode = episode,
-            comments = comments
-        )
-
-        // Then
-        assertEquals(episode, episodeWithComments.episode)
-        assertEquals(2, episodeWithComments.comments.size)
-        assertEquals("Great episode!", episodeWithComments.comments[0].content)
-        assertEquals("Very informative!", episodeWithComments.comments[1].content)
     }
 }

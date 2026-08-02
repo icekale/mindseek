@@ -1,7 +1,6 @@
 ﻿package com.mindseek.podcast.di
 
 import com.mindseek.podcast.data.remote.ApiServiceWrapper
-import com.mindseek.podcast.data.remote.api.CommentApiService
 import com.mindseek.podcast.data.remote.api.NioRadioApi
 import com.mindseek.podcast.data.remote.api.PodcastApiService
 import dagger.Module
@@ -61,16 +60,9 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideCommentApiService(retrofit: Retrofit): CommentApiService {
-        return retrofit.create(CommentApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
     fun provideApiServiceWrapper(
-        podcastApiService: PodcastApiService,
-        commentApiService: CommentApiService
+        podcastApiService: PodcastApiService
     ): ApiServiceWrapper {
-        return ApiServiceWrapper(podcastApiService, commentApiService)
+        return ApiServiceWrapper(podcastApiService)
     }
 }

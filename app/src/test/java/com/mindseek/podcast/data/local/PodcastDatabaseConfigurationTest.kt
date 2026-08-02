@@ -26,9 +26,12 @@ class PodcastDatabaseConfigurationTest {
         // Test that all migrations are included in the array
         val migrations = PodcastDatabase.getAllMigrations()
         
-        assertEquals(2, migrations.size)
+        assertEquals(5, migrations.size)
         assertTrue(migrations.contains(PodcastDatabase.MIGRATION_1_2))
         assertTrue(migrations.contains(PodcastDatabase.MIGRATION_2_3))
+        assertTrue(migrations.contains(PodcastDatabase.MIGRATION_3_4))
+        assertTrue(migrations.contains(PodcastDatabase.MIGRATION_4_5))
+        assertTrue(migrations.contains(PodcastDatabase.MIGRATION_5_6))
     }
 
     @Test
@@ -54,18 +57,18 @@ class PodcastDatabaseConfigurationTest {
     fun `database should have correct entity count`() {
         // This test verifies that we're aware of all entities in the database
         // If new entities are added, this test should be updated
-        val expectedEntityCount = 5 // Podcast, Episode, PlayHistory, Comment, Favorite
+        val expectedEntityCount = 6 // Podcast, Episode, PlayHistory, Favorite, SearchHistory, DownloadTask
         
         // Note: This is a conceptual test. In a real scenario, you might use reflection
         // or other mechanisms to verify the actual entity count from the @Database annotation
-        assertTrue("Database should have $expectedEntityCount entities", expectedEntityCount == 5)
+        assertTrue("Database should have $expectedEntityCount entities", expectedEntityCount == 6)
     }
 
     @Test
     fun `database version should be correct`() {
         // Test that the database version is set correctly
         // Note: This is a conceptual test. In practice, you might extract this from the annotation
-        val expectedVersion = 1
-        assertTrue("Database version should be $expectedVersion", expectedVersion == 1)
+        val expectedVersion = 6
+        assertTrue("Database version should be $expectedVersion", expectedVersion == 6)
     }
 }

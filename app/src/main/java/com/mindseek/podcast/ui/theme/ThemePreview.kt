@@ -341,9 +341,7 @@ fun PodcastComponentPreview() {
         
         // 模拟播放器控件
         PlayerControlsPreview()
-        
-        // 模拟评论区
-        CommentItemPreview()
+    }
     }
 }
 
@@ -449,70 +447,6 @@ private fun PlayerControlsPreview() {
     }
 }
 
-@Composable
-private fun CommentItemPreview() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = PodcastCustomShapes.CommentBubble
-    ) {
-        Column(
-            modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primary)
-                )
-                Text(
-                    text = "用户名",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = "2小时前",
-                    style = PodcastTextStyles.CommentTimestamp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            
-            Text(
-                text = "这是一条评论示例，展示评论的样式和布局。",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                TextButton(onClick = { }) {
-                    Icon(
-                        Icons.Default.ThumbUp,
-                        contentDescription = "点赞",
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("12")
-                }
-                
-                TextButton(onClick = { }) {
-                    Icon(
-                        Icons.Default.Reply,
-                        contentDescription = "回复",
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("回复")
-                }
-            }
-        }
-    }
-}
 
 // 预览组合
 @Preview(name = "Light Theme", showBackground = true)

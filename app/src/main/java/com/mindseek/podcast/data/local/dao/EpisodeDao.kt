@@ -2,7 +2,6 @@
 
 import androidx.room.*
 import com.mindseek.podcast.data.local.entity.Episode
-import com.mindseek.podcast.data.local.entity.EpisodeWithComments
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -21,10 +20,6 @@ interface EpisodeDao {
 
     @Query("SELECT * FROM episodes WHERE title LIKE '%' || :query || '%' OR description LIKE '%' || :query || '%'")
     fun searchEpisodes(query: String): Flow<List<Episode>>
-
-    @Transaction
-    @Query("SELECT * FROM episodes WHERE id = :episodeId")
-    suspend fun getEpisodeWithComments(episodeId: String): EpisodeWithComments?
 
     @Query("SELECT COUNT(*) FROM episodes WHERE isDownloaded = 1")
     suspend fun getDownloadedEpisodeCount(): Int

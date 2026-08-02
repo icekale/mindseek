@@ -37,14 +37,34 @@ class PodcastDatabaseMigrationTest {
     }
 
     @Test
+    fun `migration 4 to 5 should have correct versions`() {
+        // Test that migration versions are correctly defined
+        val migration = PodcastDatabase.MIGRATION_4_5
+        
+        assertEquals("Migration should start from version 4", 4, migration.startVersion)
+        assertEquals("Migration should end at version 5", 5, migration.endVersion)
+    }
+
+    @Test
+    fun `migration 5 to 6 should have correct versions`() {
+        // Test that migration versions are correctly defined
+        val migration = PodcastDatabase.MIGRATION_5_6
+        
+        assertEquals("Migration should start from version 5", 5, migration.startVersion)
+        assertEquals("Migration should end at version 6", 6, migration.endVersion)
+    }
+
+    @Test
     fun `getAllMigrations should return all defined migrations`() {
         // Test that all migrations are included in the array
         val migrations = PodcastDatabase.getAllMigrations()
         
-        assertEquals("Should have 3 migrations", 3, migrations.size)
+        assertEquals("Should have 5 migrations", 5, migrations.size)
         assertTrue("Should contain MIGRATION_1_2", migrations.contains(PodcastDatabase.MIGRATION_1_2))
         assertTrue("Should contain MIGRATION_2_3", migrations.contains(PodcastDatabase.MIGRATION_2_3))
         assertTrue("Should contain MIGRATION_3_4", migrations.contains(PodcastDatabase.MIGRATION_3_4))
+        assertTrue("Should contain MIGRATION_4_5", migrations.contains(PodcastDatabase.MIGRATION_4_5))
+        assertTrue("Should contain MIGRATION_5_6", migrations.contains(PodcastDatabase.MIGRATION_5_6))
     }
 
     @Test
@@ -53,9 +73,9 @@ class PodcastDatabaseMigrationTest {
         val migrations = PodcastDatabase.getAllMigrations()
         val sortedMigrations = migrations.sortedBy { it.startVersion }
         
-        // Verify we have a continuous chain from version 1 to 4
+        // Verify we have a continuous chain from version 1 to 6
         assertEquals("First migration should start at version 1", 1, sortedMigrations[0].startVersion)
-        assertEquals("Last migration should end at version 4", 4, sortedMigrations.last().endVersion)
+        assertEquals("Last migration should end at version 6", 6, sortedMigrations.last().endVersion)
         
         // Verify each migration connects to the next
         for (i in 0 until sortedMigrations.size - 1) {
@@ -111,6 +131,8 @@ class PodcastDatabaseMigrationTest {
         assertNotNull("MIGRATION_1_2 should not be null", PodcastDatabase.MIGRATION_1_2)
         assertNotNull("MIGRATION_2_3 should not be null", PodcastDatabase.MIGRATION_2_3)
         assertNotNull("MIGRATION_3_4 should not be null", PodcastDatabase.MIGRATION_3_4)
+        assertNotNull("MIGRATION_4_5 should not be null", PodcastDatabase.MIGRATION_4_5)
+        assertNotNull("MIGRATION_5_6 should not be null", PodcastDatabase.MIGRATION_5_6)
     }
 
     @Test
@@ -152,10 +174,10 @@ class PodcastDatabaseMigrationTest {
     fun `database should support expected entity count`() {
         // Test that we're aware of all entities in the database
         // This helps ensure we update tests when new entities are added
-        val expectedEntityCount = 5 // Podcast, Episode, PlayHistory, Comment, Favorite
+        val expectedEntityCount = 6 // Podcast, Episode, PlayHistory, Favorite, SearchHistory, DownloadTask
         
         // Note: This is a conceptual test to remind us to update tests when entities change
         assertTrue("Database should support at least $expectedEntityCount entities", 
-                  expectedEntityCount >= 5)
+                  expectedEntityCount >= 6)
     }
 }

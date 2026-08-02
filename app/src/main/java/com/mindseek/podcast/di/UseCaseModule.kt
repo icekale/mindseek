@@ -10,14 +10,11 @@ import com.mindseek.podcast.domain.usecase.GetAllPlayHistoryUseCase
 import com.mindseek.podcast.domain.usecase.GetPodcastDetailUseCase
 import com.mindseek.podcast.domain.usecase.GetPodcastEpisodesUseCase
 import com.mindseek.podcast.domain.usecase.GetRecommendedPodcastsUseCase
-import com.mindseek.podcast.domain.usecase.GetSubscribedPodcastsUseCase
 import com.mindseek.podcast.domain.usecase.RemoveFromFavoritesUseCase
 import com.mindseek.podcast.domain.usecase.SearchEpisodesUseCase
 import com.mindseek.podcast.domain.usecase.SearchFavoritesUseCase
 import com.mindseek.podcast.domain.usecase.SearchPlayHistoryUseCase
 import com.mindseek.podcast.domain.usecase.SearchPodcastsUseCase
-import com.mindseek.podcast.domain.usecase.SubscribeToPodcastUseCase
-import com.mindseek.podcast.domain.usecase.UnsubscribeFromPodcastUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -66,30 +63,6 @@ object UseCaseModule {
         podcastRepository: PodcastRepository
     ): GetPodcastEpisodesUseCase {
         return GetPodcastEpisodesUseCase(podcastRepository)
-    }
-
-    @Provides
-    @Singleton
-    fun provideSubscribeToPodcastUseCase(
-        podcastRepository: PodcastRepository
-    ): SubscribeToPodcastUseCase {
-        return SubscribeToPodcastUseCase(podcastRepository)
-    }
-
-    @Provides
-    @Singleton
-    fun provideUnsubscribeFromPodcastUseCase(
-        podcastRepository: PodcastRepository
-    ): UnsubscribeFromPodcastUseCase {
-        return UnsubscribeFromPodcastUseCase(podcastRepository)
-    }
-
-    @Provides
-    @Singleton
-    fun provideGetSubscribedPodcastsUseCase(
-        podcastRepository: PodcastRepository
-    ): GetSubscribedPodcastsUseCase {
-        return GetSubscribedPodcastsUseCase(podcastRepository)
     }
 
     @Provides

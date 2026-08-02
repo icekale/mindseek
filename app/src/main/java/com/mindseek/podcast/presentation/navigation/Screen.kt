@@ -15,7 +15,6 @@ object NavArgs {
 sealed class Screen(val route: String) {
     object Home : Screen("home")
     object Search : Screen("search")
-    object Subscription : Screen("subscription")
     object Profile : Screen("profile")
     object PodcastDetail : Screen("podcast_detail/{${NavArgs.PODCAST_ID}}") {
         fun createRoute(podcastId: String) = "podcast_detail/$podcastId"
@@ -25,17 +24,13 @@ sealed class Screen(val route: String) {
     }
     object History : Screen("history")
     object Favorites : Screen("favorites")
-    object Comments : Screen("comments/{${NavArgs.EPISODE_ID}}") {
-        fun createRoute(episodeId: String) = "comments/$episodeId"
-    }
 }
 
 /**
- * 底部导航栏路�?
+ * 底部导航栏路由列表
  */
 val bottomNavScreens = listOf(
     Screen.Home,
     Screen.Search,
-    Screen.Subscription,
     Screen.Profile
 )

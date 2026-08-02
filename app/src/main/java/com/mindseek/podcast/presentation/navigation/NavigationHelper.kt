@@ -24,13 +24,6 @@ class NavigationHelper(private val navController: NavController) {
     }
     
     /**
-     * 导航到评论页�?
-     */
-    fun navigateToComments(episodeId: String) {
-        navController.navigate(Screen.Comments.createRoute(episodeId))
-    }
-    
-    /**
      * 导航到历史记录页�?
      */
     fun navigateToHistory() {

@@ -4,7 +4,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Subscriptions
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /**
@@ -17,7 +16,7 @@ data class BottomNavItem(
 )
 
 /**
- * 底部导航栏项目列�?
+ * 底部导航栏项目列表
  */
 val bottomNavItems = listOf(
     BottomNavItem(
@@ -29,11 +28,6 @@ val bottomNavItems = listOf(
         screen = Screen.Search,
         icon = Icons.Default.Search,
         label = "搜索"
-    ),
-    BottomNavItem(
-        screen = Screen.Subscription,
-        icon = Icons.Default.Subscriptions,
-        label = "订阅"
     ),
     BottomNavItem(
         screen = Screen.Profile,

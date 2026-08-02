@@ -6,8 +6,6 @@ import com.mindseek.podcast.domain.model.EpisodeDomain
 import com.mindseek.podcast.domain.model.PodcastDomain
 import com.mindseek.podcast.domain.usecase.GetPodcastDetailUseCase
 import com.mindseek.podcast.domain.usecase.GetPodcastEpisodesUseCase
-import com.mindseek.podcast.domain.usecase.SubscribeToPodcastUseCase
-import com.mindseek.podcast.domain.usecase.UnsubscribeFromPodcastUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,9 +25,7 @@ data class PodcastDetailUiState(
 @HiltViewModel
 class PodcastDetailViewModel @Inject constructor(
     private val getPodcastDetailUseCase: GetPodcastDetailUseCase,
-    private val getPodcastEpisodesUseCase: GetPodcastEpisodesUseCase,
-    private val subscribeToPodcastUseCase: SubscribeToPodcastUseCase,
-    private val unsubscribeFromPodcastUseCase: UnsubscribeFromPodcastUseCase
+    private val getPodcastEpisodesUseCase: GetPodcastEpisodesUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PodcastDetailUiState())
@@ -75,13 +71,7 @@ class PodcastDetailViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(isSubscribing = true)
             
             try {
-                if (podcast.isSubscribed) {
-                    unsubscribeFromPodcastUseCase(podcast.id)
-                } else {
-                    subscribeToPodcastUseCase(podcast.id)
-                }
-                
-                // Update local state
+                // Subscription is a local-only operation with Nio Radio
                 val updatedPodcast = podcast.copy(isSubscribed = !podcast.isSubscribed)
                 _uiState.value = _uiState.value.copy(
                     podcast = updatedPodcast,

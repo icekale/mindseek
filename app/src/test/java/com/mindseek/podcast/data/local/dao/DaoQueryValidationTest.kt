@@ -52,28 +52,6 @@ class DaoQueryValidationTest {
     }
 
     @Test
-    fun `CommentDao should have all required query methods`() {
-        // Test that CommentDao interface has all expected methods
-        val commentDaoMethods = CommentDao::class.java.declaredMethods
-        val methodNames = commentDaoMethods.map { it.name }.toSet()
-        
-        // Verify essential CRUD operations exist
-        assertTrue("Should have getCommentsByEpisodeId method", methodNames.contains("getCommentsByEpisodeId"))
-        assertTrue("Should have getCommentById method", methodNames.contains("getCommentById"))
-        assertTrue("Should have insertComment method", methodNames.contains("insertComment"))
-        assertTrue("Should have updateComment method", methodNames.contains("updateComment"))
-        assertTrue("Should have deleteComment method", methodNames.contains("deleteComment"))
-        
-        // Verify comment hierarchy methods exist
-        assertTrue("Should have getTopLevelCommentsByEpisodeId method", methodNames.contains("getTopLevelCommentsByEpisodeId"))
-        assertTrue("Should have getRepliesByParentId method", methodNames.contains("getRepliesByParentId"))
-        
-        // Verify interaction methods exist
-        assertTrue("Should have updateLikeCount method", methodNames.contains("updateLikeCount"))
-        assertTrue("Should have searchComments method", methodNames.contains("searchComments"))
-    }
-
-    @Test
     fun `PlayHistoryDao should have all required query methods`() {
         // Test that PlayHistoryDao interface has all expected methods
         val playHistoryDaoMethods = PlayHistoryDao::class.java.declaredMethods
@@ -157,7 +135,6 @@ class DaoQueryValidationTest {
         // Test that DAO interfaces have @Dao annotation
         val podcastDaoAnnotations = PodcastDao::class.java.annotations
         val episodeDaoAnnotations = EpisodeDao::class.java.annotations
-        val commentDaoAnnotations = CommentDao::class.java.annotations
         val playHistoryDaoAnnotations = PlayHistoryDao::class.java.annotations
         val favoriteDaoAnnotations = FavoriteDao::class.java.annotations
         
@@ -166,8 +143,6 @@ class DaoQueryValidationTest {
             podcastDaoAnnotations.any { it.annotationClass.simpleName == "Dao" })
         assertTrue("EpisodeDao should have @Dao annotation", 
             episodeDaoAnnotations.any { it.annotationClass.simpleName == "Dao" })
-        assertTrue("CommentDao should have @Dao annotation", 
-            commentDaoAnnotations.any { it.annotationClass.simpleName == "Dao" })
         assertTrue("PlayHistoryDao should have @Dao annotation", 
             playHistoryDaoAnnotations.any { it.annotationClass.simpleName == "Dao" })
         assertTrue("FavoriteDao should have @Dao annotation", 

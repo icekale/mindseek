@@ -19,8 +19,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -56,7 +54,6 @@ import com.mindseek.podcast.domain.model.EpisodeDomain
 import com.mindseek.podcast.domain.model.PodcastDomain
 import com.mindseek.podcast.presentation.components.EpisodeItem
 import com.mindseek.podcast.presentation.components.LoadingState
-import com.mindseek.podcast.presentation.components.CommentSection
 
 /**
  * 播客详情屏幕
@@ -120,7 +117,7 @@ fun PodcastDetailScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding),
-                    message = "加载播客详情�?.."
+                    message = "加载播客详情中..."
                 )
             }
             uiState.podcast != null -> {
@@ -130,11 +127,9 @@ fun PodcastDetailScreen(
                     isSubscribing = uiState.isSubscribing,
                     onSubscribeClick = { viewModel.toggleSubscription() },
                     onEpisodeClick = { episode ->
-                        // TODO: Navigate to episode detail or start playing
                         onNavigateToPlayer()
                     },
                     onEpisodePlayClick = { episode ->
-                        // TODO: Start playing episode
                         onNavigateToPlayer()
                     },
                     onEpisodeFavoriteClick = { episode ->
@@ -170,18 +165,8 @@ private fun PodcastDetailContent(
     onEpisodePlayClick: (EpisodeDomain) -> Unit,
     onEpisodeFavoriteClick: (EpisodeDomain) -> Unit,
     onEpisodeDownloadClick: (EpisodeDomain) -> Unit,
-    modifier: Modifier = Modifier,
-    commentViewModel: CommentViewModel = hiltViewModel()
+    modifier: Modifier = Modifier
 ) {
-    val commentUiState by commentViewModel.uiState.collectAsState()
-    
-    // Load comments for the first episode if available
-    LaunchedEffect(episodes) {
-        if (episodes.isNotEmpty()) {
-            commentViewModel.loadComments(episodes.first().id)
-        }
-    }
-
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(16.dp),
@@ -235,53 +220,12 @@ private fun PodcastDetailContent(
             items(episodes) { episode ->
                 EpisodeItem(
                     episode = episode,
-                    isPlaying = false, // TODO: Get from player state
-                    playProgress = 0f, // TODO: Get from play history
+                    isPlaying = false,
+                    playProgress = 0f,
                     onPlayClick = { onEpisodePlayClick(episode) },
                     onFavoriteClick = { onEpisodeFavoriteClick(episode) },
                     onDownloadClick = { onEpisodeDownloadClick(episode) },
                     onClick = { onEpisodeClick(episode) }
-                )
-            }
-        }
-
-        // Comment section - only show if there are episodes
-        if (episodes.isNotEmpty()) {
-            item {
-                CommentSection(
-                    comments = commentUiState.comments,
-                    isLoading = commentUiState.isLoading,
-                    isRefreshing = commentUiState.isRefreshing,
-                    isPosting = commentUiState.isPosting,
-                    isDeleting = commentUiState.isDeleting,
-                    isReporting = commentUiState.isReporting,
-                    errorMessage = commentUiState.errorMessage,
-                    successMessage = commentUiState.successMessage,
-                    commentCount = commentUiState.commentCount,
-                    isUserLoggedIn = commentUiState.isUserLoggedIn,
-                    replyToComment = commentUiState.replyToComment,
-                    showCommentOptions = commentUiState.showCommentOptions,
-                    showDeleteDialog = commentUiState.showDeleteDialog,
-                    showReportDialog = commentUiState.showReportDialog,
-                    onRefresh = { commentViewModel.refreshComments() },
-                    onLoadMore = { commentViewModel.loadMoreComments() },
-                    onLikeComment = { comment -> commentViewModel.likeComment(comment) },
-                    onReplyToComment = { comment -> commentViewModel.handleReplyToComment(comment) },
-                    onMoreOptions = { comment -> commentViewModel.handleMoreOptions(comment) },
-                    onUserClick = { userId -> commentViewModel.handleUserClick(userId) },
-                    onPostComment = { content -> commentViewModel.postComment(content) },
-                    onLoginRequired = { commentViewModel.handleLoginRequired() },
-                    onCancelReply = { commentViewModel.cancelReply() },
-                    onHideCommentOptions = { commentViewModel.hideCommentOptions() },
-                    onDeleteComment = { comment -> commentViewModel.showDeleteDialog(comment) },
-                    onHideDeleteDialog = { commentViewModel.hideDeleteDialog() },
-                    onShowReportDialog = { comment -> commentViewModel.showReportDialog(comment) },
-                    onReportComment = { comment, reason, description -> 
-                        commentViewModel.reportComment(comment, reason, description) 
-                    },
-                    onHideReportDialog = { commentViewModel.hideReportDialog() },
-                    onShareComment = { comment -> commentViewModel.shareComment(comment) },
-                    onClearSuccessMessage = { commentViewModel.clearSuccessMessage() }
                 )
             }
         }

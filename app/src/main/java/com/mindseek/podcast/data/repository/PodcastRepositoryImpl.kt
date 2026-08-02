@@ -45,10 +45,6 @@ class PodcastRepositoryImpl @Inject constructor(
         return podcastDao.getAllPodcasts()
     }
 
-    override fun getSubscribedPodcasts(): Flow<List<Podcast>> {
-        return podcastDao.getSubscribedPodcasts()
-    }
-
     override suspend fun getPodcastById(id: String): Podcast? {
         return podcastDao.getPodcastById(id)
     }
@@ -221,21 +217,6 @@ class PodcastRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun subscribeToPodcast(podcastId: String) {
-        podcastDao.updateSubscriptionStatus(podcastId, true)
-        
-        // Refresh podcast data when subscribing
-        try {
-            refreshPodcastData(podcastId)
-        } catch (e: Exception) {
-            // Subscription status is already updated locally, continue silently
-        }
-    }
-
-    override suspend fun unsubscribeFromPodcast(podcastId: String) {
-        podcastDao.updateSubscriptionStatus(podcastId, false)
-    }
-
     override suspend fun getEpisodesByPodcastId(podcastId: String): Flow<List<Episode>> {
         // Try to refresh episodes from Nio Radio first
         try {
@@ -280,7 +261,6 @@ class PodcastRepositoryImpl @Inject constructor(
                     // Preserve local subscription status
                     val existingPodcast = podcastDao.getPodcastById(podcastId)
                     val updatedPodcast = localPodcast.copy(
-                        isSubscribed = existingPodcast?.isSubscribed ?: false,
                         lastUpdated = System.currentTimeMillis()
                     )
                     
@@ -327,7 +307,7 @@ class PodcastRepositoryImpl @Inject constructor(
             imageUrl = imageUrl,
             author = author,
             category = category,
-            isSubscribed = false, // Will be updated based on local state
+            isSubscribed = false,
             lastUpdated = System.currentTimeMillis()
         )
     }
