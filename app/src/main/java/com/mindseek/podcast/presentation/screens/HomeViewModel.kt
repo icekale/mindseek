@@ -6,6 +6,7 @@ import com.mindseek.podcast.core.error.ErrorHandler
 import com.mindseek.podcast.core.error.RetryManager
 import com.mindseek.podcast.core.error.executeWithErrorHandling
 import com.mindseek.podcast.core.error.executeWithRetry
+import com.mindseek.podcast.data.repository.PodcastRepositoryImpl
 import com.mindseek.podcast.domain.usecase.GetRecommendedPodcastsUseCase
 import com.mindseek.podcast.presentation.ui.state.HomeUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getRecommendedPodcastsUseCase: GetRecommendedPodcastsUseCase,
+    private val podcastRepository: PodcastRepositoryImpl,
     private val errorHandler: ErrorHandler,
     private val retryManager: RetryManager
 ) : ViewModel() {
@@ -30,6 +32,31 @@ class HomeViewModel @Inject constructor(
 
     init {
         loadRecommendedPodcasts()
+        discoverAlbums()
+    }
+
+    /**
+     * Triggers Nio Radio album discovery in the background.
+     * First loads seed albums, then probes for more albums.
+     * Shows a loading state while discovery is in progress.
+     */
+    private fun discoverAlbums() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+            try {
+                podcastRepository.discoverAlbums { discovered, total ->
+                    // Progress updates — could be used for a progress bar later
+                }
+                // After discovery, reload recommended podcasts with fresh data
+                loadRecommendedPodcasts(refresh = true)
+            } catch (e: Exception) {
+                // Discovery failed, but we can still show cached/local data
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    errorMessage = null // Don't show error for background discovery
+                )
+            }
+        }
     }
 
     fun loadRecommendedPodcasts(refresh: Boolean = false) {

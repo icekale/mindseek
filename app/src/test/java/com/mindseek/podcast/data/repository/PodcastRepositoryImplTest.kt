@@ -5,6 +5,7 @@ import com.mindseek.podcast.data.local.dao.PodcastDao
 import com.mindseek.podcast.data.local.entity.Episode
 import com.mindseek.podcast.data.local.entity.Podcast
 import com.mindseek.podcast.data.remote.api.PodcastApiService
+import com.mindseek.podcast.data.remote.api.NioRadioApi
 import com.mindseek.podcast.data.remote.dto.EpisodeDto
 import com.mindseek.podcast.data.remote.dto.PodcastDto
 import kotlinx.coroutines.flow.first
@@ -28,6 +29,9 @@ class PodcastRepositoryImplTest {
 
     @Mock
     private lateinit var podcastApiService: PodcastApiService
+
+    @Mock
+    private lateinit var nioRadioApi: NioRadioApi
 
     private lateinit var repository: PodcastRepositoryImpl
 
@@ -77,7 +81,7 @@ class PodcastRepositoryImplTest {
     @Before
     fun setup() {
         MockitoAnnotations.openMocks(this)
-        repository = PodcastRepositoryImpl(podcastDao, episodeDao, podcastApiService)
+        repository = PodcastRepositoryImpl(podcastDao, episodeDao, podcastApiService, nioRadioApi)
     }
 
     @Test

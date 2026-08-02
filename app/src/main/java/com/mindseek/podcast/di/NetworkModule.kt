@@ -2,6 +2,7 @@
 
 import com.mindseek.podcast.data.remote.ApiServiceWrapper
 import com.mindseek.podcast.data.remote.api.CommentApiService
+import com.mindseek.podcast.data.remote.api.NioRadioApi
 import com.mindseek.podcast.data.remote.api.PodcastApiService
 import dagger.Module
 import dagger.Provides
@@ -17,6 +18,8 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
+    private const val NIO_BASE_URL = "https://gateway-front-external.nio.com/"
 
     @Provides
     @Singleton
@@ -38,10 +41,16 @@ object NetworkModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://api.xiaoyuzhou.fm/") // Placeholder URL
+            .baseUrl(NIO_BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideNioRadioApi(retrofit: Retrofit): NioRadioApi {
+        return retrofit.create(NioRadioApi::class.java)
     }
 
     @Provides

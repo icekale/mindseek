@@ -31,7 +31,7 @@ import com.mindseek.podcast.data.local.entity.SearchHistory
         SearchHistory::class,
         DownloadTask::class
     ],
-    version = 3,
+    version = 5,
     exportSchema = true
 )
 abstract class PodcastDatabase : RoomDatabase() {
@@ -115,12 +115,23 @@ abstract class PodcastDatabase : RoomDatabase() {
             }
         }
 
+        // Migration from version 4 to 5: Add Nio Radio fields to episodes (imageUrl, source, author, fileSize)
+        val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE episodes ADD COLUMN imageUrl TEXT")
+                database.execSQL("ALTER TABLE episodes ADD COLUMN source TEXT NOT NULL DEFAULT ''")
+                database.execSQL("ALTER TABLE episodes ADD COLUMN author TEXT NOT NULL DEFAULT ''")
+                database.execSQL("ALTER TABLE episodes ADD COLUMN fileSize INTEGER")
+            }
+        }
+
         // Helper function to get all migrations
         fun getAllMigrations(): Array<Migration> {
             return arrayOf(
                 MIGRATION_1_2,
                 MIGRATION_2_3,
-                MIGRATION_3_4
+                MIGRATION_3_4,
+                MIGRATION_4_5
             )
         }
         

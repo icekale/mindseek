@@ -23,8 +23,14 @@ data class Episode(
     val title: String,
     val description: String,
     val audioUrl: String,
+    val imageUrl: String? = null,
     val duration: Long,
     val publishDate: Long,
+    val source: String = "",
+    val author: String = "",
+    val fileSize: Long? = null,
+    val playCount: Int = 0,
+    val averageRating: Float = 0f,
     val isDownloaded: Boolean = false,
     val localPath: String? = null
 )

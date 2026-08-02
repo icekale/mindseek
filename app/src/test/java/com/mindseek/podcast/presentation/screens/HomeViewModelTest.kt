@@ -1,5 +1,8 @@
 ﻿package com.mindseek.podcast.presentation.screens
 
+import com.mindseek.podcast.core.error.ErrorHandler
+import com.mindseek.podcast.core.error.RetryManager
+import com.mindseek.podcast.data.repository.PodcastRepositoryImpl
 import com.mindseek.podcast.domain.model.PodcastDomain
 import com.mindseek.podcast.domain.usecase.GetRecommendedPodcastsUseCase
 import com.mindseek.podcast.presentation.ui.state.HomeUiState
@@ -24,6 +27,15 @@ class HomeViewModelTest {
 
     @Mock
     private lateinit var getRecommendedPodcastsUseCase: GetRecommendedPodcastsUseCase
+
+    @Mock
+    private lateinit var podcastRepository: PodcastRepositoryImpl
+
+    @Mock
+    private lateinit var errorHandler: ErrorHandler
+
+    @Mock
+    private lateinit var retryManager: RetryManager
 
     private lateinit var viewModel: HomeViewModel
     private val testDispatcher = StandardTestDispatcher()
@@ -56,7 +68,7 @@ class HomeViewModelTest {
         whenever(getRecommendedPodcastsUseCase(1)).thenReturn(mockPodcasts)
 
         // When
-        viewModel = HomeViewModel(getRecommendedPodcastsUseCase)
+        viewModel = HomeViewModel(getRecommendedPodcastsUseCase, podcastRepository, errorHandler, retryManager)
         advanceUntilIdle()
 
         // Then
@@ -95,7 +107,7 @@ class HomeViewModelTest {
 
         whenever(getRecommendedPodcastsUseCase(1)).thenReturn(initialPodcasts, refreshedPodcasts)
 
-        viewModel = HomeViewModel(getRecommendedPodcastsUseCase)
+        viewModel = HomeViewModel(getRecommendedPodcastsUseCase, podcastRepository, errorHandler, retryManager)
         advanceUntilIdle()
 
         // When
@@ -117,7 +129,7 @@ class HomeViewModelTest {
         whenever(getRecommendedPodcastsUseCase(1)).thenThrow(RuntimeException(errorMessage))
 
         // When
-        viewModel = HomeViewModel(getRecommendedPodcastsUseCase)
+        viewModel = HomeViewModel(getRecommendedPodcastsUseCase, podcastRepository, errorHandler, retryManager)
         advanceUntilIdle()
 
         // Then
