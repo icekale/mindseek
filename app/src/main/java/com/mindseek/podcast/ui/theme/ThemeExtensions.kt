@@ -62,11 +62,11 @@ val DarkExtendedColors = PodcastExtendedColors(
     success = SuccessColor,
     warning = WarningColor,
     info = InfoColor,
-    playbackTimeBackground = Color(0xFF2A2A2A),
-    episodeCardBackground = Color(0xFF1E1E1E),
-    miniPlayerBackground = Color(0xFF252525),
-    shimmerBase = Color(0xFF2A2A2A),
-    shimmerHighlight = Color(0xFF3A3A3A)
+    playbackTimeBackground = Color(0xFF1E2430),
+    episodeCardBackground = Color(0xFF141820),
+    miniPlayerBackground = Color(0xFF1A1F2A),
+    shimmerBase = Color(0xFF1E2430),
+    shimmerHighlight = Color(0xFF2A3040)
 )
 
 /**
