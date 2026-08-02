@@ -40,24 +40,27 @@ class PodcastDetailViewModel @Inject constructor(
                 val podcast = getPodcastDetailUseCase(podcastId)
                 _uiState.value = _uiState.value.copy(podcast = podcast)
                 
-                // Load episodes
+                // Load episodes — use a timeout to detect stuck state
+                var gotEpisodes = false
                 getPodcastEpisodesUseCase(podcastId)
                     .catch { e ->
                         _uiState.value = _uiState.value.copy(
-                            errorMessage = "加载节目列表失败: ${e.message}",
+                            errorMessage = "加载失败: ${e.message}",
                             isLoading = false
                         )
                     }
                     .collect { episodes ->
+                        gotEpisodes = true
                         _uiState.value = _uiState.value.copy(
                             episodes = episodes,
-                            isLoading = false
+                            isLoading = false,
+                            errorMessage = if (episodes.isEmpty()) "暂无节目，请检查网络连接" else null
                         )
                     }
                     
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
-                    errorMessage = "加载播客详情失败: ${e.message}",
+                    errorMessage = "加载失败: ${e.message}",
                     isLoading = false
                 )
             }

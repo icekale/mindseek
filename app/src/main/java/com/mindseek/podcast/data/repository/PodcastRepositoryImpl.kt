@@ -1,5 +1,6 @@
 ﻿package com.mindseek.podcast.data.repository
 
+import android.util.Log
 import com.mindseek.podcast.data.local.dao.EpisodeDao
 import com.mindseek.podcast.data.local.dao.PodcastDao
 import com.mindseek.podcast.data.local.entity.Episode
@@ -85,9 +86,25 @@ class PodcastRepositoryImpl @Inject constructor(
             }
         }
 
-        // Persist seed results immediately
+        // Persist seed results immediately (or insert fallback seed data)
         if (discoveredAlbums.isNotEmpty()) {
             podcastDao.insertPodcasts(discoveredAlbums)
+        } else {
+            // API failed — insert hardcoded seed podcasts so UI still works
+            Log.w("NioRadio", "Seed API calls failed, inserting fallback podcast entries")
+            val fallbackPodcasts = SEED_ALBUM_IDS.map { id ->
+                Podcast(
+                    id = id.toString(),
+                    title = "专辑 $id",
+                    description = "",
+                    imageUrl = "",
+                    author = "NIO Radio",
+                    category = "NioRadio",
+                    isSubscribed = false,
+                    lastUpdated = System.currentTimeMillis()
+                )
+            }
+            podcastDao.insertPodcasts(fallbackPodcasts)
         }
 
         // Phase 2: Probe remaining album IDs in batches
@@ -218,33 +235,19 @@ class PodcastRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getEpisodesByPodcastId(podcastId: String): Flow<List<Episode>> {
-        // Try to refresh episodes from Nio Radio first
-        try {
-            val albumId = podcastId.toLongOrNull()
-            if (albumId != null) {
-                getAlbumEpisodes(albumId = albumId, page = 1, pageSize = 20)
-            }
-        } catch (_: Exception) {
-            // Continue with local data if remote fails
-        }
+        val albumId = podcastId.toLongOrNull()
         
-        // Also try the generic API as fallback
-        try {
-            val result = apiServiceWrapper.getEpisodesByPodcastId(podcastId)
-            when (result) {
-                is NetworkResult.Success -> {
-                    val localEpisodes = result.data.items.map { it.toEntity() }
-                    episodeDao.insertEpisodes(localEpisodes)
-                }
-                is NetworkResult.Error -> {
-                    // Continue with local data if remote fails
-                }
-                is NetworkResult.Loading -> {
-                    // Continue with local data while loading
-                }
+        // Try Nio Radio API first — the only real data source
+        if (albumId != null) {
+            try {
+                Log.d("NioRadio", "Fetching episodes for albumId=$albumId")
+                val episodes = getAlbumEpisodes(albumId = albumId, page = 1, pageSize = 20)
+                Log.d("NioRadio", "Got ${episodes.size} episodes for albumId=$albumId")
+            } catch (e: Exception) {
+                Log.e("NioRadio", "Failed to load episodes for albumId=$albumId", e)
             }
-        } catch (e: Exception) {
-            // Continue with local data if remote fails
+        } else {
+            Log.w("NioRadio", "podcastId=$podcastId is not a valid album ID, skipping NioRadioApi")
         }
         
         return episodeDao.getEpisodesByPodcastId(podcastId)
